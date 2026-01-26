@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>创作平台快捷入口</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css   " />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(90deg, #1890ff 0%, #007bff 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            text-align: center;
+        }
+
+        /* --- 平台入口按钮区域 --- */
+        .platform-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .platform-btn {
+            display: flex;
+            align-items: center;
+            padding: 18px 15px;
+            background-color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #f0f0f0;
+        }
+
+        .platform-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        .platform-btn i {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            width: 40px;
+        }
+
+        .btn-douyin .platform-btn i { color: #ee2c2c; }
+        .btn-weixin .platform-btn i { color: #07c160; }
+        .btn-xiaohongshu .platform-btn i { color: #ff2442; }
+        .btn-kuaishou .platform-btn i { color: #ffce00; }
+        .btn-channel .platform-btn i { color: #00a4ff; }
+
+        .platform-btn .text {
+            flex: 1;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* --- 小红书下拉菜单 --- */
+        .btn-xiaohongshu {
+            position: relative;
+        }
+
+        .xiaohongshu-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            overflow: hidden;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+        }
+
+        .btn-xiaohongshu:hover .xiaohongshu-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .xiaohongshu-dropdown a {
+            display: block;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .xiaohongshu-dropdown a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .xiaohongshu-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        /* --- 数据记录区域 --- */
+        .data-section {
+            background-color: #fafafa;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .data-form-btn {
+            display: block;
+            margin: 0 auto 25px;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #28a745 0%, #218838 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .data-form-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+
+        .data-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .preview-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .preview-card h3 {
+            margin-top: 0;
+            color: #1a1a1a;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .preview-card p {
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .preview-card .remark {
+            font-style: italic;
+            color: #777;
+            font-size: 0.85em;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preview-actions button {
+            flex: 1;
+            padding: 8px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #138496;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .no-data {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 40px 20px;
+            font-size: 1.1rem;
+        }
+
+        /* --- 录入弹窗样式 --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            margin-top: -10px;
+            margin-right: -10px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-row-1 { flex-wrap: nowrap; }
+        .form-row-2 { flex-wrap: nowrap; }
+        .form-group-third { flex: 1; }
+        .form-row-3 { flex-wrap: nowrap; }
+        .form-row-4 { flex-wrap: nowrap; }
+        .form-row-5 { flex-wrap: nowrap; }
+        .form-row-6 { flex-wrap: nowrap; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .form-actions button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .form-group,
+            .form-group-third {
+                flex: none;
+            }
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            background: #f8f9fa;
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 密码验证 -->
+<script>
+    const correctPassword = "666";
+    let inputPassword = prompt("请输入访问密码：");
+    let attempts = 1;
+    while (inputPassword !== correctPassword) {
+        if (attempts >= 3) {
+            alert("密码错误次数过多，页面将关闭。");
+            window.close();
+            throw new Error("Access denied");
+        }
+        inputPassword = prompt("密码错误，请重新输入：");
+        attempts++;
+    }
+</script>
+
+<div class="container">
+    <header>
+        <h1>创作平台快捷入口</h1>
+        <p class="subtitle">点击按钮，快速登录各平台</p>
+    </header>
+
+    <div class="content">
+        <h2 class="section-title">平台入口</h2>
+        <div class="platform-buttons">
+            <a href="https://creator.douyin.com/   " target="_blank" class="platform-btn btn-douyin">
+                <i class="fab fa-tiktok"></i>
+                <span class="text">抖音创作平台</span>
+            </a>
+
+            <a href="https://channels.weixin.qq.com/login.html   " target="_blank" class="platform-btn btn-channel">
+                <i class="fas fa-video"></i>
+                <span class="text">视频号平台</span>
+            </a>
+
+            <div class="platform-btn btn-xiaohongshu">
+                <i class="fas fa-heart"></i>
+                <span class="text">小红书</span>
+                <div class="xiaohongshu-dropdown">
+					<a href="https://www.xiaohongshu.com/   " target="_blank">小红书</a>
+                    <a href="https://creator.xiaohongshu.com/   " target="_blank">小红书内容创作</a>
+                    <a href="https://pro.xiaohongshu.com/   " target="_blank">小红书专业号</a>
+                    <a href="https://ad.xiaohongshu.com/   " target="_blank">小红书聚光</a>
+                    <a href="https://pgy.xiaohongshu.com/   " target="_blank">小红书蒲公英</a>
+                </div>
+            </div>
+
+            <a href="https://cp.kuaishou.com/profile   " target="_blank" class="platform-btn btn-kuaishou">
+                <i class="fas fa-bolt"></i>
+                <span class="text">快手创作平台</span>
+            </a>
+
+            <a href="https://mp.weixin.qq.com/cgi-bin/loginpage?t=wxm2-login&lang=zh_CN" target="_blank" class="platform-btn btn-weixin">
+                <i class="fab fa-weixin"></i>
+                <span class="text">微信公众平台</span>
+            </a>
+        </div>
+
+        <div class="data-section">
+            <h2 class="section-title">数据记录</h2>
+            <button id="openFormBtn" class="data-form-btn">录入新数据</button>
+            <div id="dataPreviewContainer" class="data-preview-container">
+                <div class="no-data">暂无数据，请录入。</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 web程序作者 kevin鲁大师，仅供作者使用，盗用必究
+</footer>
+
+<!-- 录入弹窗 -->
+<div id="dataModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">录入数据</h2>
+        <form id="dataForm">
+            <input type="hidden" id="editIndex" value="">
+
+            <div class="form-row form-row-1">
+                <div class="form-group">
+                    <label for="title">标题:</label>
+                    <input type="text" id="title" name="title" required placeholder="例如：付费概况" value="付费概况">
+                </div>
+                <div class="form-group">
+                    <label for="date">日期:</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+            </div>
+
+            <div class="form-row form-row-2">
+                <div class="form-group form-group-third">
+                    <label for="totalSpend">总花费 (元):</label>
+                    <input type="number" step="0.01" id="totalSpend" name="totalSpend" required>
+                </div>
+                <div class="form-group form-group-third">
+                    <label for="totalClicks">总点击 (个):</label>
+                    <input type="number" id="totalClicks" name="totalClicks" required>
+                </div>
+                <div class="form-group form-group-third">
+                    <label for="avgClickCost">平均点击花费 (元):</label>
+                    <input type="number" step="0.01" id="avgClickCost" name="avgClickCost" required>
+                </div>
+            </div>
+
+            <div class="form-row form-row-6">
+                <div class="form-group">
+                    <label for="privateMsgs">私信 (个):</label>
+                    <input type="number" id="privateMsgs" name="privateMsgs" required>
+                </div>
+                <div class="form-group">
+                    <label for="leadGen">留资 (个):</label>
+                    <input type="number" id="leadGen" name="leadGen" required>
+                </div>
+            </div>
+
+            <div class="form-row form-row-3">
+                <div class="form-group">
+                    <label for="addWechat">加微信 (个):</label>
+                    <input type="number" id="addWechat" name="addWechat" required>
+                </div>
+            </div>
+
+            <div class="form-row form-row-4">
+                <div class="form-group">
+                    <label for="plantingSpend">种草花费 (元):</label>
+                    <input type="number" step="0.01" id="plantingSpend" name="plantingSpend" required>
+                </div>
+                <div class="form-group">
+                    <label for="plantingRemark">种草备注:</label>
+                    <input type="text" id="plantingRemark" name="plantingRemark" value="北京、上海、苏州">
+                </div>
+            </div>
+
+            <div class="form-row form-row-5">
+                <div class="form-group">
+                    <label for="customerSpend">客资花费 (元):</label>
+                    <input type="number" step="0.01" id="customerSpend" name="customerSpend" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerRemark">客资备注:</label>
+                    <input type="text" id="customerRemark" name="customerRemark" value="上海">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="cancelBtn" class="btn-cancel">取消</button>
+                <button type="submit" id="saveBtn" class="btn-save">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let dataEntries = JSON.parse(sessionStorage.getItem('dataEntries')) || [];
+    let editingIndex = null;
+
+    const openFormBtn = document.getElementById('openFormBtn');
+    const dataModal = document.getElementById('dataModal');
+    const closeModal = document.querySelector('.close');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const dataForm = document.getElementById('dataForm');
+    const dataPreviewContainer = document.getElementById('dataPreviewContainer');
+    const editIndexInput = document.getElementById('editIndex');
+    const dateInput = document.getElementById('date');
+    const titleInput = document.getElementById('title');
+    const plantingRemarkInput = document.getElementById('plantingRemark');
+    const customerRemarkInput = document.getElementById('customerRemark');
+
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const formattedDate = yesterday.toISOString().split('T')[0];
+    dateInput.value = formattedDate;
+    dateInput.max = formattedDate;
+
+    openFormBtn.addEventListener('click', () => {
+        editingIndex = null;
+        editIndexInput.value = '';
+        document.getElementById('modalTitle').textContent = '录入新数据';
+        dataForm.reset();
+        dateInput.value = formattedDate;
+        titleInput.value = '付费概况';
+        plantingRemarkInput.value = '北京、上海、苏州';
+        customerRemarkInput.value = '上海';
+        dataModal.style.display = 'block';
+    });
+
+    closeModal.addEventListener('click', () => {
+        dataModal.style.display = 'none';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        dataModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === dataModal) {
+            dataModal.style.display = 'none';
+        }
+    });
+
+    dataForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(dataForm);
+        const entry = {
+            title: formData.get('title'),
+            date: formData.get('date'),
+            totalSpend: parseFloat(formData.get('totalSpend')) || 0,
+            totalClicks: parseInt(formData.get('totalClicks')) || 0,
+            avgClickCost: parseFloat(formData.get('avgClickCost')) || 0,
+            privateMsgs: parseInt(formData.get('privateMsgs')) || 0,
+            leadGen: parseInt(formData.get('leadGen')) || 0,
+            addWechat: parseInt(formData.get('addWechat')) || 0,
+            plantingSpend: parseFloat(formData.get('plantingSpend')) || 0,
+            plantingRemark: formData.get('plantingRemark') || '',
+            customerSpend: parseFloat(formData.get('customerSpend')) || 0,
+            customerRemark: formData.get('customerRemark') || ''
+        };
+
+        if (editingIndex !== null) {
+            dataEntries[editingIndex] = entry;
+            editingIndex = null;
+        } else {
+            dataEntries.push(entry);
+        }
+
+        sessionStorage.setItem('dataEntries', JSON.stringify(dataEntries));
+        renderPreview();
+        dataModal.style.display = 'none';
+    });
+
+    window.addEventListener('load', () => {
+        renderPreview();
+    });
+
+    window.addEventListener('beforeunload', () => {
+        sessionStorage.removeItem('dataEntries');
+    });
+
+    function renderPreview() {
+        if (dataEntries.length === 0) {
+            dataPreviewContainer.innerHTML = '<div class="no-data">暂无数据，请录入。</div>';
+            return;
+        }
+
+        dataPreviewContainer.innerHTML = '';
+        dataEntries.forEach((entry, index) => {
+            const card = document.createElement('div');
+            card.className = 'preview-card';
+            card.innerHTML = `
+                <h3>${entry.title}</h3>
+                <p><strong>日期:</strong> ${formatDate(entry.date)}</p>
+                <p><strong>总花费:</strong> ${entry.totalSpend.toFixed(2)} 元</p>
+                <p><strong>总点击:</strong> ${entry.totalClicks} 个</p>
+                <p><strong>平均点击花费:</strong> ${entry.avgClickCost.toFixed(2)} 元</p>
+                <p><strong>私信:</strong> ${entry.privateMsgs} 个</p>
+                <p><strong>留资:</strong> ${entry.leadGen} 个</p>
+                <p><strong>加微信:</strong> ${entry.addWechat} 个</p>
+                <p><strong>种草花费:</strong> ${entry.plantingSpend.toFixed(2)} 元 <span class="remark">(投放: ${entry.plantingRemark})</span></p>
+                <p><strong>客资花费:</strong> ${entry.customerSpend.toFixed(2)} 元 <span class="remark">(投放: ${entry.customerRemark})</span></p>
+                <div class="preview-actions">
+                    <button class="btn-edit" onclick="editEntry(${index})">编辑</button>
+                    <button class="btn-delete" onclick="deleteEntry(${index})">删除</button>
+                </div>
+            `;
+            dataPreviewContainer.appendChild(card);
+        });
+    }
+
+    function editEntry(index) {
+        const entry = dataEntries[index];
+        if (!entry) return;
+
+        document.getElementById('title').value = entry.title;
+        document.getElementById('date').value = entry.date;
+        document.getElementById('totalSpend').value = entry.totalSpend || '';
+        document.getElementById('totalClicks').value = entry.totalClicks || '';
+        document.getElementById('avgClickCost').value = entry.avgClickCost || '';
+        document.getElementById('privateMsgs').value = entry.privateMsgs || '';
+        document.getElementById('leadGen').value = entry.leadGen || '';
+        document.getElementById('addWechat').value = entry.addWechat || '';
+        document.getElementById('plantingSpend').value = entry.plantingSpend || '';
+        document.getElementById('plantingRemark').value = entry.plantingRemark;
+        document.getElementById('customerSpend').value = entry.customerSpend || '';
+        document.getElementById('customerRemark').value = entry.customerRemark;
+
+        editingIndex = index;
+        editIndexInput.value = index;
+        document.getElementById('modalTitle').textContent = '编辑数据';
+        dataModal.style.display = 'block';
+    }
+
+    function deleteEntry(index) {
+        if (confirm('确定要删除这条记录吗？')) {
+            dataEntries.splice(index, 1);
+            sessionStorage.setItem('dataEntries', JSON.stringify(dataEntries));
+            renderPreview();
+        }
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}年${month}月${day}日`;
+    }
+
+    window.editEntry = editEntry;
+    window.deleteEntry = deleteEntry;
+</script>
+
+</body>
+</html>
